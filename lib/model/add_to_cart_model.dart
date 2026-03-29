@@ -1,5 +1,5 @@
 class AddToCartModel {
-  AddToCartModel({required this.productId, this.productCode, this.productName, this.unitPrice, this.quantity = 1, this.productDetails, this.itemCartIndex = -1, this.uniqueCheck, this.stock, this.productPurchasePrice, this.lossProfit});
+  AddToCartModel({required this.productId, this.productCode, this.productName, this.unitPrice, this.quantity = 1, this.productDetails, this.itemCartIndex = -1, this.uniqueCheck, this.stock, this.productPurchasePrice, this.lossProfit ,this.categoryName,});
 
   num productId;
   dynamic productCode;
@@ -12,4 +12,5 @@ class AddToCartModel {
   int itemCartIndex;
   num? stock;
   num? lossProfit;
+  String? categoryName;
 }

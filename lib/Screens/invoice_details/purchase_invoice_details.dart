@@ -18,7 +18,11 @@ import '../../thermal priting invoices/provider/print_thermal_invoice_provider.d
 import '../Purchase/Model/purchase_transaction_model.dart';
 
 class PurchaseInvoiceDetails extends StatefulWidget {
-  const PurchaseInvoiceDetails({super.key, required this.transitionModel, required this.businessInfo, this.isFromPurchase});
+  const PurchaseInvoiceDetails(
+      {super.key,
+      required this.transitionModel,
+      required this.businessInfo,
+      this.isFromPurchase});
 
   final PurchaseTransaction transitionModel;
   final binfo.BusinessInformation businessInfo;
@@ -30,7 +34,11 @@ class PurchaseInvoiceDetails extends StatefulWidget {
 
 class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
   num productPrice({required num detailsId}) {
-    return widget.transitionModel.details!.where((element) => element.id == detailsId).first.productPurchasePrice ?? 0;
+    return widget.transitionModel.details!
+            .where((element) => element.id == detailsId)
+            .first
+            .productPurchasePrice ??
+        0;
   }
 
   num getReturndDiscountAmount() {
@@ -39,7 +47,10 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
       for (var returns in widget.transitionModel.purchaseReturns!) {
         if (returns.purchaseReturnDetails?.isNotEmpty ?? false) {
           for (var details in returns.purchaseReturnDetails!) {
-            totalReturnDiscount += ((productPrice(detailsId: details.purchaseDetailId ?? 0) * (details.returnQty ?? 0)) - ((details.returnAmount ?? 0)));
+            totalReturnDiscount +=
+                ((productPrice(detailsId: details.purchaseDetailId ?? 0) *
+                        (details.returnQty ?? 0)) -
+                    ((details.returnAmount ?? 0)));
           }
         }
       }
@@ -95,7 +106,11 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
   int serialNumber = 1;
 
   num getProductQuantity({required num detailsId}) {
-    num totalQuantity = widget.transitionModel.details?.where((element) => element.id == detailsId).first.quantities ?? 0;
+    num totalQuantity = widget.transitionModel.details
+            ?.where((element) => element.id == detailsId)
+            .first
+            .quantities ??
+        0;
     if (widget.transitionModel.purchaseReturns?.isNotEmpty ?? false) {
       for (var returns in widget.transitionModel.purchaseReturns!) {
         if (returns.purchaseReturnDetails?.isNotEmpty ?? false) {
@@ -130,66 +145,65 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: businessSettingData.when(
-                        data: (business) {
-                          final isSvg = business.pictureUrl?.endsWith('.svg');
-                          final imageUrl = '${APIConfig.domain}${business.pictureUrl}';
-                          const placeholder = AssetImage(mainConstant.logo);
-                          return business.pictureUrl.isEmptyOrNull
-                              ? _buildInvoiceLogo(image: placeholder)
-                              : (isSvg ?? false)
-                                  ? SvgPicture.network(imageUrl, height: 54.12, width: 52, fit: BoxFit.cover)
-                                  : _buildInvoiceLogo(
-                                      image: NetworkImage(imageUrl),
-                                    );
-                        },
-                        error: (e, stack) => Text(e.toString()),
-                        loading: () => const Center(
-                          child: CircularProgressIndicator(),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: businessSettingData.when(
+                          data: (business) {
+                            final isSvg = business.pictureUrl?.endsWith('.svg');
+                            final imageUrl =
+                                '${APIConfig.domain}${business.pictureUrl}';
+                            const placeholder = AssetImage(mainConstant.logo);
+
+                            return business.pictureUrl.isEmptyOrNull
+                                ? _buildInvoiceLogo(image: placeholder)
+                                : (isSvg ?? false)
+                                    ? SvgPicture.network(
+                                        imageUrl,
+                                        height: 54.12,
+                                        width: 52,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : _buildInvoiceLogo(
+                                        image: NetworkImage(imageUrl),
+                                      );
+                          },
+                          error: (e, stack) => Text(e.toString()),
+                          loading: () => const CircularProgressIndicator(),
                         ),
-                      ),
-                      title: Text(
-                        '${widget.businessInfo.companyName}',
-                        style: _theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      subtitle: Text.rich(
-                        TextSpan(
-                          text: '${lang.S.of(context).mobiles} : ',
-                          children: [
-                            TextSpan(
-                              text: widget.businessInfo.phoneNumber.toString(),
-                            )
-                          ],
-                        ),
-                      ),
-                      trailing: Container(
-                        alignment: Alignment.center,
-                        // height: 52,
-                        width: 110,
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            bottomLeft: Radius.circular(25),
+                        title: Text(
+                          widget.businessInfo.companyName ?? '',
+                          style: _theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        child: Text(
-                          lang.S.of(context).invoice,
-                          style: _theme.textTheme.titleLarge?.copyWith(
-                            color: white,
-                            fontWeight: FontWeight.bold,
+                        subtitle: Text(
+                          '${lang.S.of(context).mobiles} : ${widget.businessInfo.phoneNumber}',
+                        ),
+                        trailing: Container(
+                          width: 110,
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              bottomLeft: Radius.circular(25),
+                            ),
+                          ),
+                          child: Text(
+                            lang.S.of(context).invoice,
+                            textAlign: TextAlign.center,
+                            style: _theme.textTheme.titleLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10.0),
 
-                    //-----------------header data----------------------------
+                    const SizedBox(height: 10.0),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -204,7 +218,9 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   text: '${lang.S.of(context).billTO} : ',
                                   children: [
                                     TextSpan(
-                                      text: widget.transitionModel.party?.name ?? '',
+                                      text:
+                                          widget.transitionModel.party?.name ??
+                                              '',
                                     )
                                   ],
                                 ),
@@ -214,7 +230,9 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   text: '${_lang.mobiles} : ',
                                   children: [
                                     TextSpan(
-                                      text: widget.transitionModel.party?.phone ?? '',
+                                      text:
+                                          widget.transitionModel.party?.phone ??
+                                              '',
                                     )
                                   ],
                                 ),
@@ -233,7 +251,11 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   text: '${_lang.purchaseBy} ',
                                   children: [
                                     TextSpan(
-                                      text: widget.transitionModel.user?.role == "shop-owner" ? "Admin" : widget.transitionModel.user?.name ?? '',
+                                      text: widget.transitionModel.user?.role ==
+                                              "shop-owner"
+                                          ? "Admin"
+                                          : widget.transitionModel.user?.name ??
+                                              '',
                                     )
                                   ],
                                 ),
@@ -244,7 +266,8 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   text: '${_lang.inv} : ',
                                   children: [
                                     TextSpan(
-                                      text: '#${widget.transitionModel.invoiceNumber}',
+                                      text:
+                                          '#${widget.transitionModel.invoiceNumber}',
                                     )
                                   ],
                                 ),
@@ -255,7 +278,10 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   text: '${lang.S.of(context).date} : ',
                                   children: [
                                     TextSpan(
-                                      text: DateFormat.yMMMd().format(DateTime.parse(widget.transitionModel.purchaseDate ?? '')),
+                                      text: DateFormat.yMMMd().format(
+                                          DateTime.parse(widget.transitionModel
+                                                  .purchaseDate ??
+                                              '')),
                                     ),
                                   ],
                                 ),
@@ -265,10 +291,12 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                 visible: widget.businessInfo.vatNumber != null,
                                 child: Text.rich(
                                   TextSpan(
-                                    text: '${widget.businessInfo.vatName ?? 'VAT Number'} : ',
+                                    text:
+                                        '${widget.businessInfo.vatName ?? 'VAT Number'} : ',
                                     children: [
                                       TextSpan(
-                                        text: widget.businessInfo.vatNumber ?? '',
+                                        text:
+                                            widget.businessInfo.vatNumber ?? '',
                                       )
                                     ],
                                   ),
@@ -313,7 +341,9 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   _lang.sl,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -324,7 +354,9 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   _lang.item,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.left,
                                 ),
                               ),
@@ -335,7 +367,9 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   _lang.quantity,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -346,7 +380,9 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   _lang.unitPrice,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.right,
                                 ),
                               ),
@@ -357,17 +393,24 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                   _lang.totalPrice,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.right,
                                 ),
                               ),
                             ],
                           ),
                           // Data rows from widget.transitionModel.details
-                          ...widget.transitionModel.details!.asMap().entries.map((entry) {
+                          ...widget.transitionModel.details!
+                              .asMap()
+                              .entries
+                              .map((entry) {
                             final i = entry.key; // This is the index
-                            final detail = entry.value; // This is the detail object
-                            final quantity = getProductQuantity(detailsId: detail.id ?? 0);
+                            final detail =
+                                entry.value; // This is the detail object
+                            final quantity =
+                                getProductQuantity(detailsId: detail.id ?? 0);
                             final unitPrice = detail.productPurchasePrice ?? 0;
                             final totalPrice = unitPrice * quantity;
 
@@ -377,7 +420,8 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                       color: Colors.white,
                                     )
                                   : BoxDecoration(
-                                      color: const Color(0xffC52127).withOpacity(0.07),
+                                      color: const Color(0xffC52127)
+                                          .withOpacity(0.07),
                                     ),
                               children: [
                                 Container(
@@ -439,11 +483,13 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                               text: '${lang.S.of(context).subTotal} : ',
                               children: [
                                 TextSpan(
-                                  text: '$currency ${mainConstant.formatPointNumber(getTotalForOldInvoice())}',
+                                  text:
+                                      '$currency ${mainConstant.formatPointNumber(getTotalForOldInvoice())}',
                                 ),
                               ],
                             ),
-                            style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                            style: _theme.textTheme.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.w500),
                           ),
                         ),
                       ],
@@ -458,11 +504,13 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           text: '${lang.S.of(context).discount} : ',
                           children: [
                             TextSpan(
-                              text: '$currency ${mainConstant.formatPointNumber((widget.transitionModel.discountAmount ?? 0) + getReturndDiscountAmount())}',
+                              text:
+                                  '$currency ${mainConstant.formatPointNumber((widget.transitionModel.discountAmount ?? 0) + getReturndDiscountAmount())}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
 
@@ -472,14 +520,17 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                       alignment: Alignment.centerRight,
                       child: Text.rich(
                         TextSpan(
-                          text: '${widget.transitionModel.vat?.name ?? lang.S.of(context).vat} : ',
+                          text:
+                              '${widget.transitionModel.vat?.name ?? lang.S.of(context).vat} : ',
                           children: [
                             TextSpan(
-                              text: '$currency ${mainConstant.formatPointNumber((widget.transitionModel.vatAmount ?? 0))}',
+                              text:
+                                  '$currency ${mainConstant.formatPointNumber((widget.transitionModel.vatAmount ?? 0))}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
 
@@ -494,11 +545,13 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           style: const TextStyle(fontWeight: FontWeight.w500),
                           children: [
                             TextSpan(
-                              text: '$currency ${mainConstant.formatPointNumber(widget.transitionModel.shippingCharge ?? 0)}',
+                              text:
+                                  '$currency ${mainConstant.formatPointNumber(widget.transitionModel.shippingCharge ?? 0)}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
                     const SizedBox(height: 5.0),
@@ -511,11 +564,13 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           text: '${lang.S.of(context).totalAmount} : ',
                           children: [
                             TextSpan(
-                              text: '$currency ${mainConstant.formatPointNumber((widget.transitionModel.totalAmount ?? 0) + getTotalReturndAmount())}',
+                              text:
+                                  '$currency ${mainConstant.formatPointNumber((widget.transitionModel.totalAmount ?? 0) + getTotalReturndAmount())}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -526,7 +581,8 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                         child: Table(
                           defaultColumnWidth: const FixedColumnWidth(120),
                           border: const TableBorder(
-                            verticalInside: BorderSide(color: Color(0xffD9D9D9)),
+                            verticalInside:
+                                BorderSide(color: Color(0xffD9D9D9)),
                             left: BorderSide(color: Color(0xffD9D9D9)),
                             right: BorderSide(color: Color(0xffD9D9D9)),
                             bottom: BorderSide(color: Color(0xffD9D9D9)),
@@ -536,77 +592,109 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                             TableRow(
                               children: [
                                 Container(
-                                  decoration: const BoxDecoration(color: Color(0xffC52127)),
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xffC52127)),
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     _lang.sl,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
                                 Container(
-                                  decoration: const BoxDecoration(color: Color(0xffC52127)),
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xffC52127)),
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     _lang.returnedDate,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.right,
                                   ),
                                 ),
                                 Container(
-                                  decoration: const BoxDecoration(color: Color(0xff000000)),
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xff000000)),
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     _lang.returnedItem,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.left,
                                   ),
                                 ),
                                 Container(
-                                  decoration: const BoxDecoration(color: Color(0xff000000)),
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xff000000)),
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     _lang.quantity,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
                                 Container(
-                                  decoration: const BoxDecoration(color: Color(0xff000000)),
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xff000000)),
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     _lang.totalPrice,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.right,
                                   ),
                                 ),
                               ],
                             ),
                             // Data rows
-                            for (var i = 0; i < (widget.transitionModel.purchaseReturns?.length ?? 0); i++)
-                              for (var detailIndex = 0; detailIndex < (widget.transitionModel.purchaseReturns?[i].purchaseReturnDetails?.length ?? 0); detailIndex++)
+                            for (var i = 0;
+                                i <
+                                    (widget.transitionModel.purchaseReturns
+                                            ?.length ??
+                                        0);
+                                i++)
+                              for (var detailIndex = 0;
+                                  detailIndex <
+                                      (widget
+                                              .transitionModel
+                                              .purchaseReturns?[i]
+                                              .purchaseReturnDetails
+                                              ?.length ??
+                                          0);
+                                  detailIndex++)
                                 TableRow(
                                   decoration: serialNumber.isOdd
                                       ? const BoxDecoration(
                                           color: Colors.white,
                                         ) // Odd row color
                                       : BoxDecoration(
-                                          color: const Color(0xffC52127).withValues(alpha: 0.07),
+                                          color: const Color(0xffC52127)
+                                              .withValues(alpha: 0.07),
                                         ),
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                         (serialNumber++).toString(),
-                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
                                               color: kGreyTextColor,
                                             ),
                                         textAlign: TextAlign.center,
@@ -615,21 +703,40 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                                     Container(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        DateFormat.yMMMd().format(DateTime.parse(widget.transitionModel.purchaseReturns?[i].returnDate ?? DateTime.now().toString())),
+                                        DateFormat.yMMMd().format(
+                                            DateTime.parse(widget
+                                                    .transitionModel
+                                                    .purchaseReturns?[i]
+                                                    .returnDate ??
+                                                DateTime.now().toString())),
                                         textAlign: TextAlign.right,
                                       ),
                                     ),
                                     Container(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        productName(detailsId: widget.transitionModel.purchaseReturns?[i].purchaseReturnDetails?[detailIndex].purchaseDetailId ?? 0),
+                                        productName(
+                                            detailsId: widget
+                                                    .transitionModel
+                                                    .purchaseReturns?[i]
+                                                    .purchaseReturnDetails?[
+                                                        detailIndex]
+                                                    .purchaseDetailId ??
+                                                0),
                                         maxLines: 2,
                                       ),
                                     ),
                                     Container(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        widget.transitionModel.purchaseReturns?[i].purchaseReturnDetails?[detailIndex].returnQty.toString() ?? '0',
+                                        widget
+                                                .transitionModel
+                                                .purchaseReturns?[i]
+                                                .purchaseReturnDetails?[
+                                                    detailIndex]
+                                                .returnQty
+                                                .toString() ??
+                                            '0',
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -660,7 +767,8 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                               ),
                             ],
                           ),
-                          style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                          style: _theme.textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w500),
                         ),
                       ),
                     const SizedBox(height: 5.0),
@@ -673,11 +781,13 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           text: '${lang.S.of(context).totalPayable} : ',
                           children: [
                             TextSpan(
-                              text: '$currency ${mainConstant.formatPointNumber(widget.transitionModel.totalAmount ?? 0)}',
+                              text:
+                                  '$currency ${mainConstant.formatPointNumber(widget.transitionModel.totalAmount ?? 0)}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
                     const SizedBox(height: 5.0),
@@ -690,11 +800,13 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                           text: '${lang.S.of(context).paid} : ',
                           children: [
                             TextSpan(
-                              text: '$currency ${mainConstant.formatPointNumber(((widget.transitionModel.totalAmount ?? 0) - (widget.transitionModel.dueAmount ?? 0)) + (widget.transitionModel.changeAmount ?? 0))}',
+                              text:
+                                  '$currency ${mainConstant.formatPointNumber(((widget.transitionModel.totalAmount ?? 0) - (widget.transitionModel.dueAmount ?? 0)) + (widget.transitionModel.changeAmount ?? 0))}',
                             ),
                           ],
                         ),
-                        style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                        style: _theme.textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
                     const SizedBox(height: 5.0),
@@ -709,11 +821,13 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                             text: '${lang.S.of(context).due} : ',
                             children: [
                               TextSpan(
-                                text: '$currency ${mainConstant.formatPointNumber(widget.transitionModel.dueAmount ?? 0)}',
+                                text:
+                                    '$currency ${mainConstant.formatPointNumber(widget.transitionModel.dueAmount ?? 0)}',
                               ),
                             ],
                           ),
-                          style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                          style: _theme.textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),
@@ -729,11 +843,13 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                             style: const TextStyle(fontWeight: FontWeight.w600),
                             children: [
                               TextSpan(
-                                text: '$currency${mainConstant.formatPointNumber(widget.transitionModel.changeAmount ?? 0)}',
+                                text:
+                                    '$currency${mainConstant.formatPointNumber(widget.transitionModel.changeAmount ?? 0)}',
                               ),
                             ],
                           ),
-                          style: _theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500),
+                          style: _theme.textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),
@@ -742,7 +858,8 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                       child: Text(
                         lang.S.of(context).thakYouForYourPurchase,
                         maxLines: 1,
-                        style: _theme.textTheme.titleMedium?.copyWith(color: kTitleColor, fontWeight: FontWeight.w600),
+                        style: _theme.textTheme.titleMedium?.copyWith(
+                            color: kTitleColor, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -794,7 +911,10 @@ class _PurchaseInvoiceDetailsState extends State<PurchaseInvoiceDetails> {
                   padding: const EdgeInsets.all(15.0),
                   child: GestureDetector(
                     onTap: () async {
-                      PrintPurchaseTransactionModel model = PrintPurchaseTransactionModel(purchaseTransitionModel: widget.transitionModel, personalInformationModel: widget.businessInfo);
+                      PrintPurchaseTransactionModel model =
+                          PrintPurchaseTransactionModel(
+                              purchaseTransitionModel: widget.transitionModel,
+                              personalInformationModel: widget.businessInfo);
                       await printerData.printPurchaseThermalInvoiceNow(
                         transaction: model,
                         productList: model.purchaseTransitionModel!.details,

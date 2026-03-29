@@ -5,3 +5,4 @@ import '../Repo/product_repo.dart';
 
 ProductRepo productRepo = ProductRepo();
 final productProvider = FutureProvider<List<ProductModel>>((ref) => productRepo.fetchAllProducts());
+

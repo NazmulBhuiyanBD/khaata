@@ -6,7 +6,6 @@ import 'package:mobile_pos/Screens/Customers/add_customer.dart';
 import 'package:mobile_pos/Screens/Sales/add_sales.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
-
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../Provider/profile_provider.dart';
 import '../../constant.dart';

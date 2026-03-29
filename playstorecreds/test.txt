@@ -1,0 +1,17 @@
+keystone pass=123456
+What is your first and last name? ABIR MAHMUD
+
+What is the name of your organizational unit?
+mobile 
+
+ What is the name of your organization?
+Skoder Technologies Limited
+
+What is the name of your City or Locality?
+Dhaka
+
+What is the name of your State or Province?
+Dhaka
+
+What is the two-letter country code for this unit?
+bd

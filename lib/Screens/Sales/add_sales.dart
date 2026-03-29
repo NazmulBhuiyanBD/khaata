@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -16,7 +15,6 @@ import 'package:mobile_pos/Screens/Sales/sales_products_list_screen.dart';
 import 'package:mobile_pos/Screens/Settings/sales%20settings/model/amount_rounding_dropdown_model.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 import 'package:nb_utils/nb_utils.dart';
-
 import '../../Const/api_config.dart';
 import '../../GlobalComponents/glonal_popup.dart';
 import '../../Repository/API/future_invoice.dart';

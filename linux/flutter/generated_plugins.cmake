@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   nb_utils
   open_file_linux
   printing
+  restart_app
   url_launcher_linux
 )
 

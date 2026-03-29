@@ -265,9 +265,11 @@ class StockListState extends State<StockList> {
                                       // headingRowColor: MaterialStateColor.resolveWith((states) => const Color(0xffFEF0F1)),
                                       columns: [
                                         DataColumn(label: Text(lang.S.of(context).product)),
+                                        DataColumn(label: const Text("Category Info")),
                                         DataColumn(label: Text(lang.S.of(context).cost)),
                                         DataColumn(label: Text(lang.S.of(context).qty)),
                                         DataColumn(label: Text(lang.S.of(context).sale)),
+
                                       ],
                                       rows: showableProducts.map((product) {
                                         bool isLowStock = (product.productStock ?? 0) <= (product.alertQty ?? 0);
@@ -301,6 +303,22 @@ class StockListState extends State<StockList> {
                                                     textAlign: TextAlign.start,
                                                   ),
                                           ),
+                                              DataCell(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (product.size != null && product.size!.isNotEmpty)
+            Text("Size: ${product.size}", style: theme.textTheme.bodySmall),
+
+          if (product.capacity != null && product.capacity!.isNotEmpty)
+            Text("Capacity: ${product.capacity}", style: theme.textTheme.bodySmall),
+
+          if (product.type != null && product.type!.isNotEmpty)
+            Text("Type: ${product.type}", style: theme.textTheme.bodySmall),
+        ],
+      ),
+    ),
                                           DataCell(Text('$currency${product.productPurchasePrice?.toStringAsFixed(2)}', style: theme.textTheme.bodyMedium?.copyWith(color: isLowStock ? Colors.red : Colors.black))),
                                           DataCell(
                                             Text(
